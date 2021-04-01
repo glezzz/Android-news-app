@@ -49,9 +49,25 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
         val article = differ.currentList[position]
         holder.itemView.apply {
             Glide.with(this).load(article.urlToImage).into(binding.ivArticleImage)
-
-
+            binding.tvSource.text = article.source.name
+            binding.tvTitle.text = article.title
+            binding.tvDescription.text = article.description
+            binding.tvPublishedAt.text = article.publishedAt
+            setOnItemClickListener {
+                // 'it' refers to the variable checked for null. In this case, onItemCLickListener lambda function
+                // ?.let = check if it is null https://kotlinlang.org/docs/null-safety.html#checking-for-null-in-conditions
+                onItemClickListener?.let { it(article) }
+            }
         }
+    }
+
+    private var onItemClickListener: ((Article) -> Unit)? = null
+
+    /**
+     * Sets the click listener for the article to display
+     */
+    fun setOnItemClickListener(listener: (Article) -> Unit) {
+        onItemClickListener = listener
     }
 
     override fun getItemCount(): Int {
