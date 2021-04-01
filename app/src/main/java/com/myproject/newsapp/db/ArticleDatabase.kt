@@ -32,7 +32,7 @@ abstract class ArticleDatabase : RoomDatabase() {
         // return current instance. If it's null, set that instance with the synchronized block
         operator fun invoke(context: Context) = instance ?: synchronized(LOCK) {
             // check again if it's null, if not call createDatabase and also set instance to
-            // result of createDatabase.That instance of db class will then be used to access
+            // result of createDatabase.That instance of DB class will then be used to access
             // the ArticleDao which is used to access the actual DB functions
             instance ?: createDatabase(context).also { instance = it }
         }
