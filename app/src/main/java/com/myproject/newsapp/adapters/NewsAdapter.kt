@@ -44,6 +44,10 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
         )
     }
 
+    override fun getItemCount(): Int {
+        return differ.currentList.size
+    }
+
     private var onItemClickListener: ((Article) -> Unit)? = null
 
     override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
@@ -54,10 +58,10 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
             holder.binding.tvTitle.text = article.title
             holder.binding.tvDescription.text = article.description
             holder.binding.tvPublishedAt.text = article.publishedAt
-            setOnItemClickListener {
-                // 'it' refers to the variable checked for null. In this case, onItemCLickListener lambda function
-                // ?.let = check if it is null https://kotlinlang.org/docs/null-safety.html#checking-for-null-in-conditions
-                onItemClickListener?.let { it(article) }
+            setOnClickListener {
+                    // 'it' refers to the variable checked for null. In this case, onItemCLickListener lambda function
+                    // ?.let = check if it is null https://kotlinlang.org/docs/null-safety.html#checking-for-null-in-conditions
+                    onItemClickListener?.let { it(article) }
             }
         }
     }
@@ -65,11 +69,7 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
     /**
      * Sets the click listener for the article to display
      */
-    private fun setOnItemClickListener(listener: (Article) -> Unit) {
+    fun setOnItemClickListener(listener: (Article) -> Unit) {
         onItemClickListener = listener
-    }
-
-    override fun getItemCount(): Int {
-        return differ.currentList.size
     }
 }
