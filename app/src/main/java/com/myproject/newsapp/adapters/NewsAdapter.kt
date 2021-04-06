@@ -32,6 +32,7 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
     }
 
     val differ = AsyncListDiffer(this, differCallback)
+    // https://developer.android.com/reference/androidx/recyclerview/widget/AsyncListDiffer
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleViewHolder {
         return ArticleViewHolder(
@@ -42,6 +43,8 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
             )
         )
     }
+
+    private var onItemClickListener: ((Article) -> Unit)? = null
 
     override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
         val article = differ.currentList[position]
@@ -59,12 +62,10 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
         }
     }
 
-    private var onItemClickListener: ((Article) -> Unit)? = null
-
     /**
      * Sets the click listener for the article to display
      */
-    fun setOnItemClickListener(listener: (Article) -> Unit) {
+    private fun setOnItemClickListener(listener: (Article) -> Unit) {
         onItemClickListener = listener
     }
 
