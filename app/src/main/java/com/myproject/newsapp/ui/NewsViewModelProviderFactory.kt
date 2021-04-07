@@ -7,7 +7,7 @@ import com.myproject.newsapp.repository.NewsRepository
 
 class NewsViewModelProviderFactory(
     val app: Application,
-    val newsRepository: NewsRepository
+    private val newsRepository: NewsRepository
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {

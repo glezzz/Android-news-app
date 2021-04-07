@@ -19,6 +19,7 @@
         android:layout_marginBottom="32dp"
         android:layout_marginEnd="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:contentDescription="@string/save_article" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

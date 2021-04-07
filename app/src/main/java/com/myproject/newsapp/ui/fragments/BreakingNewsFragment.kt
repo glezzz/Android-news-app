@@ -25,8 +25,6 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
     lateinit var newsAdapter: NewsAdapter
     private var binding: FragmentBreakingNewsBinding? = null
 
-    val TAG = "BreakingNewsFragment"
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
