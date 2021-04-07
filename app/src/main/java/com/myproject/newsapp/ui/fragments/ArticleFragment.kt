@@ -38,7 +38,7 @@ class ArticleFragment : Fragment(R.layout.fragment_article) {
             // page loads inside this webview and not in the standard browser
             webViewClient = WebViewClient()
             // load URL by passing the article URL
-            loadUrl(article.url)
+            article.url?.let { loadUrl(it) }
         }
 
         // save article in saved news
