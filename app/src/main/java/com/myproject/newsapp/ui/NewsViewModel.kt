@@ -15,17 +15,21 @@ class NewsViewModel(
 ) : ViewModel() {
 
     val breakingNews: MutableLiveData<Resource<NewsResponse>> = MutableLiveData()
-    val breakingNewsPage = 1
+    var breakingNewsPage = 1
+
+    // to save the current response for pagination
+    var breakingNewsResponse: NewsResponse? = null
 
     val searchNews: MutableLiveData<Resource<NewsResponse>> = MutableLiveData()
-    val searchNewsPage = 1
+    var searchNewsPage = 1
+    var searchNewsResponse: NewsResponse? = null
 
     init {
         getBreakingNews("us")
     }
 
     /**
-     * Executes api call
+     * Execute api call
      */
     // viewModelScope makes sure the coroutine stays alive only as long as the viewModel is alive
     fun getBreakingNews(countryCode: String) = viewModelScope.launch {
@@ -44,30 +48,64 @@ class NewsViewModel(
         searchNews.postValue(handleSearchNewsResponse(response))
     }
 
-    private fun handleBreakingNewsResponse(response: Response<NewsResponse>) : Resource<NewsResponse> {
+    private fun handleBreakingNewsResponse(response: Response<NewsResponse>): Resource<NewsResponse> {
         if (response.isSuccessful) {
             response.body()?.let { resultResponse ->
-                return Resource.Success(resultResponse)
+                // after successful, increase/create page numbering
+                breakingNewsPage++
+                // first response
+                if (breakingNewsResponse == null) {
+                    breakingNewsResponse = resultResponse
+
+                // if it's not null (not the first page) add them to the list of articles
+                } else {
+                    val oldArticles = breakingNewsResponse?.articles
+                    val newArticles = resultResponse.articles
+                    // add the new articles to the list
+                    oldArticles?.addAll(newArticles)
+                }
+                            // if breakingNewsResponse is null (first response), return resultResponse instead
+                return Resource.Success(breakingNewsResponse ?: resultResponse)
             }
         }
         return Resource.Error(response.message())
     }
 
-    private fun handleSearchNewsResponse(response: Response<NewsResponse>) : Resource<NewsResponse> {
+    private fun handleSearchNewsResponse(response: Response<NewsResponse>): Resource<NewsResponse> {
         if (response.isSuccessful) {
             response.body()?.let { resultResponse ->
-                return Resource.Success(resultResponse)
+                // after successful, increase/create page numbering
+                searchNewsPage++
+                // first response
+                if (searchNewsResponse == null) {
+                    searchNewsResponse = resultResponse
+
+                    // if it's not null (not the first page) add them to the list of articles
+                } else {
+                    val oldArticles = searchNewsResponse?.articles
+                    val newArticles = resultResponse.articles
+                    // add the new articles to the list
+                    oldArticles?.addAll(newArticles)
+                }
+                // if breakingNewsResponse is null (first response), return resultResponse instead
+                return Resource.Success(searchNewsResponse ?: resultResponse)
             }
         }
         return Resource.Error(response.message())
     }
 
+    /**
+     * Save article in saved news
+     */
     fun saveArticle(article: Article) = viewModelScope.launch {
         newsRepository.upsert(article)
     }
 
     fun getSavedNews() = newsRepository.getSavedNews()
 
+    /**
+     * Delete article from saved news
+     */
     fun deleteSavedArticle(article: Article) = viewModelScope.launch {
         newsRepository.deleteArticle(article)
     }
